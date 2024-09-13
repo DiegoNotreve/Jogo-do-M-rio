@@ -15,6 +15,15 @@
   background: linear-gradient(#87ceeb, #e0f6ff);
 }
 
+.score {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    color: #fff;
+    z-index: 20; /* Certifique-se de que o score fique acima dos outros elementos */
+  }
+
 button.start {
   background: none;
   border: none;
@@ -152,3 +161,65 @@ button.start:hover {
     bottom: 0;
   }
 }
+
+@media (max-width: 768px) {
+    .mario {
+      width: 100px;
+    }
+  
+    button.start img {
+      max-width: 80px; /* Ajusta o tamanho máximo das imagens */
+    }
+  
+    button.start img.icone {
+      width: 80px;
+    }
+  
+    .game-over h1 {
+      font-size: 2rem;
+    }
+  
+    .game-over button {
+      font-size: 1.2rem;
+      padding: 0.4rem;
+    }
+  
+    .clouds {
+      width: 400px;
+    }
+  
+    .pipe {
+      width: 60px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .mario {
+      width: 80px;
+    }
+  
+    button.start img {
+      max-width: 60px; /* Ajusta o tamanho máximo das imagens */
+    }
+  
+    button.start img.icone {
+      width: 60px;
+    }
+  
+    .game-over h1 {
+      font-size: 1.5rem;
+    }
+  
+    .game-over button {
+      font-size: 1rem;
+      padding: 0.3rem;
+    }
+  
+    .clouds {
+      width: 300px;
+    }
+  
+    .pipe {
+      width: 50px;
+    }
+  }

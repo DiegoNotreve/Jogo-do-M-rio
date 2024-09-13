@@ -4,14 +4,30 @@ const pipe = document.querySelector('.pipe');
 const start = document.querySelector('.start');
 const gameOver = document.querySelector('.game-over');
 
-audioStart = new Audio('./soung/audio_theme.mp3');
-audioGameOver = new Audio('./soung/audio_gameover.mp3');
+const audioStart = new Audio('./soung/audio_theme.mp3');
+const audioGameOver = new Audio('./soung/audio_gameover.mp3');
 
 // Garantir que o áudio seja carregado antes de tocar
 audioStart.load();
 audioGameOver.load();
 
 let gameLoop; // Variável para armazenar o loop do jogo
+let score = 0; // Contador de canos pulados
+
+const updateDimensions = () => {
+  const gameWidth = window.innerWidth;
+  const gameHeight = window.innerHeight;
+
+  // Ajusta o tamanho dos canos e do Mario com base na largura da tela
+  const pipeWidth = Math.max(gameWidth / 15, 60); // Exemplo de ajuste dinâmico
+  const marioWidth = Math.max(gameWidth / 10, 80); // Exemplo de ajuste dinâmico
+
+  pipe.style.width = `${pipeWidth}px`;
+  mario.style.width = `${marioWidth}px`;
+
+  // Ajusta a posição do Mario e dos canos
+  mario.style.bottom = '0'; // Ajuste fixo, mas você pode calcular com base na altura da tela
+};
 
 const startGame = () => {
   pipe.classList.add('pipe-animation'); // Reiniciar a animação do cano
@@ -21,6 +37,7 @@ const startGame = () => {
   audioStart.play();
   
   // Reiniciar o loop do jogo
+  updateDimensions(); // Atualiza dimensões antes de começar o jogo
   loop();
 };
 
@@ -31,7 +48,7 @@ const restartGame = () => {
   pipe.style.right = '0';
   pipe.classList.add('pipe-animation'); // Adicionar novamente a animação do pipe
   mario.src = './img/mario.gif';
-  mario.style.width = '150px';
+  mario.style.width = '150px'; // Resetando o tamanho padrão
   mario.style.bottom = '0';
 
   start.style.display = 'none';
@@ -45,6 +62,7 @@ const restartGame = () => {
 
   // Reiniciar o loop do jogo
   clearInterval(gameLoop); // Limpar qualquer loop anterior
+  updateDimensions(); // Atualiza dimensões antes de reiniciar
   loop();
 };
 
@@ -63,6 +81,7 @@ const loop = () => {
       window.getComputedStyle(mario).bottom.replace('px', '')
     );
 
+    // Verifica se o Mario está colidindo com o cano
     if (pipePosition <= 120 && pipePosition > 0 && marioPosition < 80) {
       pipe.classList.remove('pipe-animation');
       pipe.style.left = `${pipePosition}px`;
@@ -74,6 +93,9 @@ const loop = () => {
       mario.style.width = '80px';
       mario.style.marginLeft = '50px';
 
+      // Atualiza o score
+      gameOver.querySelector('h1').textContent = `Game Over!`;
+
       // Parar o áudio do jogo e tocar o game over
       audioStart.pause();
       audioGameOver.play();
@@ -82,27 +104,28 @@ const loop = () => {
 
       clearInterval(gameLoop); // Parar o loop quando der game over
     }
+
+    // Aumenta o score quando o cano passa pela tela
+    if (pipePosition === 0) {
+      score++;
+    }
   }, 10);
 };
 
+// Atualiza as dimensões no carregamento inicial e no redimensionamento da tela
+updateDimensions();
+window.addEventListener('resize', updateDimensions);
 
-
-document.addEventListener('keypress', e => {
-  const tecla = e.key;
-  if (tecla === ' ') {
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space') { // 'Space' é mais consistente que ' '
     jump();
+  } else if (e.code === 'Enter') {
+    startGame();
   }
 });
 
 document.addEventListener('touchstart', e => {
   if (e.touches.length) {
     jump();
-  }
-});
-
-document.addEventListener('keypress', e => {
-  const tecla = e.key;
-  if (tecla === 'Enter') {
-    startGame();
   }
 });
